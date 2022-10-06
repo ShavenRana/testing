@@ -1,0 +1,28 @@
+pipeline{
+  agent any
+  stages {
+    stage('Build Application') {
+      steps  {
+        bat  'mvn clean install'
+       }
+      }
+      stage('Test') {
+        steps {
+          echo 'test Aplication...'
+          bat 'mvn test'
+         }
+        }
+        
+      stage('deploy CloudHub') {
+              environment {
+           ANYPOINT_CREDENTIALS = credentials('anypoint.creds')
+         }
+          steps {
+            echo 'Deploying only because of code commit....'
+            echo deploying to ${params.env} environment "
+            echo "worker is ${params.workerType}"
+            bat 'mvn package deploy -DmuleDeploy -Dusername=sunita_kaileyy -Dpassword=Sunitakailey99$ -Denvironment=Sandbox -Dworkertype=Micro -Dworkers=1 -Dregion=us-west-2'
+          }
+        }
+     }
+   }
